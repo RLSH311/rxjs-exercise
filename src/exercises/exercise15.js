@@ -1,5 +1,5 @@
 const { fromHttpRequest } = require('../utils/http');
-const { map, concatMap, count, filter, tap, mergeMap } = require('rxjs/operators');
+const { map, concatMap, count, filter, tap, mergeMap, take } = require('rxjs/operators');
 const { concat } = require('rxjs');
 
 let ratingPerMovie = {};
@@ -27,5 +27,6 @@ function calculateRatingForMovie(movie) {
 fromHttpRequest('https://orels-moviedb.herokuapp.com/movies')
     .pipe(
         concatMap(movie => movie),
+        take(10), // only 10 movies because the server is weak
         mergeMap(movie => calculateRatingForMovie(movie))
     ).subscribe();
